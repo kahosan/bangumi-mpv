@@ -1,11 +1,13 @@
-import { createApp } from 'vue';
-import './style.css';
-import App from './App.vue';
+import { createApp } from 'vue'
+import App from './app.vue'
 
-createApp(App).mount(
-  (() => {
-    const app = document.createElement('div');
-    document.body.append(app);
-    return app;
-  })(),
-);
+function main() {
+  const parent = document.querySelector('.navTabs')
+  const children = document.createElement('li')
+
+  parent?.append(children)
+
+  return children
+}
+
+createApp(App).mount(main())
