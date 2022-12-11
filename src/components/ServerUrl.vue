@@ -1,19 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useStorage } from '@vueuse/core'
-
 import { NButton, NInput, NInputGroup, NTag } from 'naive-ui'
 
+import { useServerUrl } from '../composables/use-server-url'
+
 const serverUrl = ref('')
-const serverUrlStorage = useStorage<string[]>('server-url', [])
+const serverUrlStorage = useServerUrl()
 
 const handleAddServerUrl = (url: string) => {
   if (url === '')
     return
-  serverUrlStorage.value.push(`https://${url}`)
+
+  const prefix = url.startsWith('https://') || url.startsWith('http://') ? '' : 'http://'
+  const suffix = url.endsWith('/') ? '' : '/'
+
+  serverUrlStorage.push(prefix + url + suffix)
 }
 const handleRemoveServerUrl = (index: number) => {
-  serverUrlStorage.value.splice(index, 1)
+  serverUrlStorage.splice(index, 1)
 }
 </script>
 
@@ -24,16 +28,8 @@ const handleRemoveServerUrl = (index: number) => {
       size="small"
       placeholder="服务器地址..."
       @keyup.enter="handleAddServerUrl(serverUrl)"
-    >
-      <template #prefix>
-        <span>https://</span>
-      </template>
-    </NInput>
-    <NButton
-      type="tertiary"
-      size="small"
-      @click="handleAddServerUrl(serverUrl)"
-    >
+    />
+    <NButton type="tertiary" size="small" @click="handleAddServerUrl(serverUrl)">
       添加
     </NButton>
   </NInputGroup>
@@ -42,4 +38,14 @@ const handleRemoveServerUrl = (index: number) => {
       {{ url }}
     </NTag>
   </div>
+  <div class="tip">
+    nginx 文件服务器的地址，可以添加多个
+  </div>
 </template>
+
+<style scoped>
+.tip {
+  margin-top: 0.25rem;
+  line-height: 1.4;
+}
+</style>
