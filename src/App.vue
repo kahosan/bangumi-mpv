@@ -28,7 +28,7 @@ const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark
         MPV 设置
       </button>
       <div v-if="menuVisible" class="menu-content">
-        <MpvMenu :close-menu="() => menuVisible = false" />
+        <MpvMenu />
       </div>
     </div>
   </NConfigProvider>
