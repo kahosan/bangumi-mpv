@@ -38,6 +38,7 @@ const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark
 .main {
   position: relative;
 }
+
 .menu-content {
   position: absolute;
   top: 20;
@@ -77,9 +78,8 @@ html[data-theme='dark'] .main-button:hover {
 </style>
 
 <style>
-html[data-theme='dark'] .main-content>* {
-  background-color: #202020;
-  color: #EEE;
-  font-size: 14px;
+.menu-content input {
+  background: unset !important;
+  box-shadow: unset !important;
 }
 </style>

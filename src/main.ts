@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import App from './app.vue'
+import App from './App.vue'
 
 function main() {
   const parent = document.querySelector('.navTabs')
