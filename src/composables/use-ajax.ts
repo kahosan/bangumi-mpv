@@ -18,6 +18,10 @@ interface Response {
   readonly statusText: string
 }
 
+export type ErrorResponse = Response & {
+  readonly error: string
+}
+
 export function useAjax(options: XhrRequest): Promise<Response> {
   return new Promise((resolve, reject) => {
     GM_xmlhttpRequest({

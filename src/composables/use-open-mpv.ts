@@ -1,9 +1,9 @@
-import { useStorage } from '@vueuse/core'
-import { useGetAnimeFileUrl } from './use-get-anime-file-url'
+import { useGetAnimePathUrl } from './use-get-anime-file-url'
+import { useLocalAlias } from './use-local-alias'
 
 export function useOpenMpv() {
-  const serverUrl = useStorage<string[]>('server-url', [])
-  const animeFileUrl = useGetAnimeFileUrl(serverUrl.value)
+  const localAlias = useLocalAlias()
+  const animeFileUrl = useGetAnimePathUrl(localAlias.value)
 
   return () => {}
 }
