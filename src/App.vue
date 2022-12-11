@@ -82,4 +82,8 @@ html[data-theme='dark'] .main-button:hover {
   background: unset !important;
   box-shadow: unset !important;
 }
+
+.menu-content >* {
+  font-size: 12px !important;
+}
 </style>
