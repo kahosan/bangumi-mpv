@@ -32,7 +32,7 @@ function openMpv(url: string, markId: string, epId: string) {
   const iframe = document.createElement('iframe')
   const safeUrl = btoa(url).replace(/\//g, '_').replace(/\+/g, '-')
 
-  if (iina)
+  if (iina.value)
     iframe.src = `iina://weblink?url=${url}`
   else
     iframe.src = `mpv://play/${safeUrl}`
