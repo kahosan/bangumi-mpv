@@ -1,7 +1,6 @@
 import { ref } from 'vue'
 
 import { useAjax } from './use-ajax'
-import type { ErrorResponse } from './use-ajax'
 
 export async function useGetAnimeList(urls: string[]): Promise<Record<string, string[]>> {
   const animeList = ref<Record<string, string[]>>({})
@@ -21,8 +20,7 @@ export async function useGetAnimeList(urls: string[]): Promise<Record<string, st
       }
     }
     catch (error) {
-      const ajaxErr = error as ErrorResponse
-      console.error(ajaxErr)
+      console.error('useGetAnimeList', error)
     }
   }
 

@@ -56,7 +56,7 @@ export async function useGetAnimeFileUrl(baseUrl: string, epId: string) {
     return movieUrl
   }
   catch (error) {
-    console.error(error)
+    console.error('useGetAnimeFileUrl', error)
   }
 }
 
@@ -77,6 +77,6 @@ async function handleSubFolder(url: string): Promise<string | undefined> {
     }
   }
   catch (error) {
-    console.error(error)
+    console.error('handleSubFolder', error)
   }
 }
