@@ -9,17 +9,19 @@ const aliasStorage = useLocalAlias()
 const inputText = ref('')
 
 const serverUrlStorage = useServerUrl()
-const selectServerUrl = ref(null)
+const selectServerUrl = ref<(string | number)[] | null>(null)
 
 const tipIsShow = ref(false)
-if (selectServerUrl.value)
-  tipIsShow.value = false
 
 const addServerUrl = () => {
+  if (selectServerUrl.value?.length === 0)
+    selectServerUrl.value = null
+
   if (!selectServerUrl.value || !inputText.value) {
     tipIsShow.value = true
     return
   }
+
   if (inputText.value) {
     const alias = selectServerUrl.value + inputText.value
     const suffix = alias.endsWith('/') ? '' : '/'
@@ -45,7 +47,7 @@ const addServerUrl = () => {
   <NTag v-if="aliasStorage" closable @close="aliasStorage = null">
     {{ aliasStorage }}
   </NTag>
-  <NCheckboxGroup v-model:value="selectServerUrl">
+  <NCheckboxGroup v-model:value="selectServerUrl" :max="1">
     <NCheckbox v-for="serverUrl in serverUrlStorage" :key="serverUrl" :value="serverUrl">
       {{ serverUrl }}
     </NCheckbox>
@@ -55,7 +57,7 @@ const addServerUrl = () => {
     需要指定一下是哪个目录。
   </div>
   <div v-show="tipIsShow" class="tip-2">
-    {{ inputText ? '请选择一个服务器' : '请输入一个本地目录别名' }}
+    {{ inputText ? selectServerUrl ? null : '请选择一个服务器' : '请输入一个本地目录别名' }}
   </div>
 </template>
 
