@@ -12,8 +12,12 @@ export async function useGetAnimePathUrl(alias?: string | null) {
   let error = true
 
   // 如果有别名，直接返回别名
-  if (alias !== undefined && alias !== null)
-    return alias
+  if (alias !== undefined && alias !== null) {
+    return {
+      animePathUrl: alias,
+      error: false,
+    }
+  }
 
   const animeList = await useGetAnimeList(serverUrls)
 
