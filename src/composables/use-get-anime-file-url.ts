@@ -28,7 +28,7 @@ export async function useGetAnimePathUrl(alias?: string | null) {
    * }
    */
   for (const [serverUrl, childrenList] of Object.entries(animeList)) {
-    for (const anime in childrenList) {
+    for (const anime of childrenList) {
       if (anime === curAnimeName) {
         animePathUrl = serverUrl + curAnimeName
         error = false
