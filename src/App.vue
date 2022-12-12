@@ -14,8 +14,9 @@ const toggleMenuVisible = () => {
 }
 
 // 重新定义每集 a 标签的动作
-const openInMpv = useOpenMpv()
-useReset(openInMpv)
+useOpenMpv()
+  .then(openInMpv => useReset(openInMpv))
+  .catch(console.error)
 
 // set components dark mode
 const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark'
