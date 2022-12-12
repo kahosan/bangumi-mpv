@@ -1,16 +1,15 @@
-import { onMounted } from 'vue'
+export function useReset(fn: (event: HTMLAnchorElement) => void) {
+  const episodeUlEle = document.querySelector('.prg_list')
 
-export function useReset(fn: () => void) {
-  const episodeUl = document.querySelector('.prg_list')
+  if (!episodeUlEle)
+    return
 
-  onMounted(() => {
-    if (!episodeUl)
-      return
+  for (const episodeLiEle of episodeUlEle.children) {
+    const epATag = episodeLiEle.children[0] as HTMLAnchorElement
 
-    for (const episodeLi of episodeUl.children) {
-      const epATag = episodeLi.children[0] as HTMLLinkElement
-      epATag.href = 'javascript:void(0)'
-      epATag.addEventListener('click', fn)
-    }
-  })
+    epATag.href = 'javascript:void(0)'
+    epATag.addEventListener('click', function () {
+      fn(this)
+    })
+  }
 }
