@@ -30,7 +30,8 @@ export async function useGetAnimePathUrl(alias?: string | null) {
   for (const [serverUrl, childrenList] of Object.entries(animeList)) {
     for (const anime of childrenList) {
       if (anime === curAnimeName) {
-        animePathUrl = serverUrl + curAnimeName
+        // TODO 弄个工具函数处理后缀
+        animePathUrl = serverUrl + (curAnimeName.endsWith('/') ? curAnimeName : `${curAnimeName}/`)
         error = false
       }
     }
@@ -42,7 +43,7 @@ export async function useGetAnimePathUrl(alias?: string | null) {
   }
 }
 
-export async function useGetAnimeFileUrl(baseUrl: string, epId: string) {
+export async function useGetAnimeFileUrl(baseUrl: string, epId: number) {
   try {
     const url = new URL(`${epId}/`, baseUrl).href
     const dom = (await useAjax({ url })).responseText
