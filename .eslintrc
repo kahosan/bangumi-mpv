@@ -1,3 +1,6 @@
 {
-  "extends": ["kaho/vue"]
+  "extends": ["kaho/vue"],
+  "rules": {
+    "no-console": ["error", { "allow": ["warn", "error", "info"] }]
+  }
 }

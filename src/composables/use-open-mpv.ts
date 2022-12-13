@@ -9,6 +9,7 @@ export async function useOpenMpv(event: HTMLAnchorElement) {
 
   if (animePathUrl === undefined) {
     console.error(`寻找本地文件路径失败, animePathUrl: ${animePathUrl}`)
+    // eslint-disable-next-line no-alert
     alert('寻找本地文件路径失败, 确定服务器的文件夹中是否存在该番剧。\n也可以尝试使用目录别名')
     return
   }
@@ -16,14 +17,24 @@ export async function useOpenMpv(event: HTMLAnchorElement) {
   // 应该咩有人会拿 01 当作文件夹的名字吧，，
   const epId = event.textContent
   const markId = event.id.slice(4)
-  const movieUrl = await useGetAnimeFileUrl(animePathUrl || '', Number(epId || ''))
 
-  if (!movieUrl || !epId) {
+  if (epId === null) {
+    console.error('获取 epId 失败')
+    return
+  }
+  else if (markId === undefined) {
+    console.error('获取 markId 失败')
+    return
+  }
+
+  const movieUrl = await useGetAnimeFileUrl(animePathUrl || '', +epId)
+
+  if (!movieUrl?.value) {
     console.error(`寻找本地文件失败, movieUrl: ${movieUrl}, epId: ${epId}`)
     return
   }
 
-  openMpv(movieUrl.value || '', markId, epId || '')
+  openMpv(movieUrl.value, markId, epId)
 }
 
 function openMpv(url: string, markId: string, epId: string) {
