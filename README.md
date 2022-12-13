@@ -8,6 +8,7 @@ MacOS 需要安装 [IINA](https://github.com/iina/iina) 播放器，并点击 MP
 其他平台需要先安装 [mpv-handler](https://github.com/akiirui/mpv-handler/blob/main/README.zh-Hans.md) 用来注册 MPV 的 URL Protocol。
 
 安装好后可以在任意一个动漫的概览界面看到它 [示例](https://bgm.tv/subject/328609)。
+
 <img src="docs/bochi.jpeg" alt="bochi" width="600"/>
 
 ## 安装
@@ -66,16 +67,21 @@ server {
 ## 使用
 
 上述配置都弄好后，将你的 nginx 服务器地址 & IP 填入 MPV 设置中，点击添加。
+
 <img src="docs/add_server.jpeg" alt="add_server" width="300"/>
 
 然后点击你想看的剧集，正常情况下会弹出一个窗口询问你要打开 MPV 播放器吗，点击确定。
 
 有一种情况是网页上的的中文名称和你的动漫文件夹中的文件夹名称不一致，比如
+
 <img src="docs/web_name.jpeg" alt="web_name" width="200"/>
+
 这里的名称是「秋叶原冥途战争」，但是我服务器上对应的文件夹的名称是「秋叶原女仆战争」
+
 <img src="docs/server_name.jpeg" alt="server_name" width="200"/>
 
 可以在 MPV设置 中设置本地目录的别名，像这样 **注意勾选对应的服务器地址**
+
 <img src="docs/add_alias.jpeg" alt="add_alias" width="300"/>
 
 就可以正常播放了。
