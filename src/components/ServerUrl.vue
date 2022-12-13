@@ -2,10 +2,10 @@
 import { ref } from 'vue'
 import { NButton, NInput, NInputGroup, NTag } from 'naive-ui'
 
-import { useServerUrl } from '../composables/use-server-url'
+import { useServerUrlStore } from '../store/server-url'
 
 const serverUrl = ref('')
-const serverUrlStorage = useServerUrl()
+const { getServerUrl, setServerUrl, removeServerUrl } = useServerUrlStore()
 
 const handleAddServerUrl = (url: string) => {
   if (url === '')
@@ -14,10 +14,10 @@ const handleAddServerUrl = (url: string) => {
   const prefix = url.startsWith('https://') || url.startsWith('http://') ? '' : 'http://'
   const suffix = url.endsWith('/') ? '' : '/'
 
-  serverUrlStorage.push(prefix + url + suffix)
+  setServerUrl([...getServerUrl(), prefix + url + suffix])
 }
 const handleRemoveServerUrl = (index: number) => {
-  serverUrlStorage.splice(index, 1)
+  removeServerUrl(index)
 }
 </script>
 
@@ -33,7 +33,7 @@ const handleRemoveServerUrl = (index: number) => {
       添加
     </NButton>
   </NInputGroup>
-  <div v-for="url, index in serverUrlStorage" :key="url">
+  <div v-for="url, index in getServerUrl()" :key="url">
     <NTag closable @close="handleRemoveServerUrl(index)">
       {{ url }}
     </NTag>

@@ -1,39 +1,37 @@
-import { useGetAnimeFileUrl, useGetAnimePathUrl } from './use-get-anime-file-url'
-import { useIINA } from './use-iina'
-import { useLocalAlias } from './use-local-alias'
+import { useAnimePathUrlStore } from '../store/anime-path-url'
+import { useIinaStore } from '../store/iina'
 
-export async function useOpenMpv() {
-  const alias = useLocalAlias()
+import { useGetAnimeFileUrl } from './use-get-anime-file-url'
 
-  const { error: getAnimePathUrlError, animePathUrl } = await useGetAnimePathUrl(alias.value)
+export async function useOpenMpv(event: HTMLAnchorElement) {
+  const { getAnimePathUrl } = useAnimePathUrlStore()
+  const animePathUrl = await getAnimePathUrl()
 
-  return async (event: HTMLAnchorElement) => {
-    if (getAnimePathUrlError) {
-      console.error(`寻找本地文件路径失败, animePathUrl: ${animePathUrl}`)
-      alert('寻找本地文件路径失败, 确定服务器的文件夹中是否存在该番剧。\n也可以尝试使用目录别名')
-      return
-    }
-
-    // 应该咩有人会拿 01 当作文件夹的名字吧，，
-    const epId = event.textContent
-    const markId = event.id.slice(4)
-    const movieUrl = await useGetAnimeFileUrl(animePathUrl, Number(epId || ''))
-
-    if (!movieUrl || !epId) {
-      console.error(`寻找本地文件失败, movieUrl: ${movieUrl}, epId: ${epId}`)
-      return
-    }
-
-    openMpv(movieUrl || '', markId, epId || '')
+  if (animePathUrl === undefined) {
+    console.error(`寻找本地文件路径失败, animePathUrl: ${animePathUrl}`)
+    alert('寻找本地文件路径失败, 确定服务器的文件夹中是否存在该番剧。\n也可以尝试使用目录别名')
+    return
   }
+
+  // 应该咩有人会拿 01 当作文件夹的名字吧，，
+  const epId = event.textContent
+  const markId = event.id.slice(4)
+  const movieUrl = await useGetAnimeFileUrl(animePathUrl || '', Number(epId || ''))
+
+  if (!movieUrl || !epId) {
+    console.error(`寻找本地文件失败, movieUrl: ${movieUrl}, epId: ${epId}`)
+    return
+  }
+
+  openMpv(movieUrl.value || '', markId, epId || '')
 }
 
 function openMpv(url: string, markId: string, epId: string) {
-  const iina = useIINA()
+  const { getIina } = useIinaStore()
   const iframe = document.createElement('iframe')
   const safeUrl = btoa(url).replace(/\//g, '_').replace(/\+/g, '-')
 
-  if (iina.value)
+  if (getIina())
     iframe.src = `iina://weblink?url=${url}`
   else
     iframe.src = `mpv://play/${safeUrl}`

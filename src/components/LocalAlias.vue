@@ -2,18 +2,18 @@
 import { NButton, NCheckbox, NCheckboxGroup, NInput, NInputGroup, NTag } from 'naive-ui'
 import { ref } from 'vue'
 
-import { useLocalAlias } from '../composables/use-local-alias'
-import { useServerUrl } from '../composables/use-server-url'
+import { useServerUrlStore } from '../store/server-url'
+import { useLocalAliasStore } from '../store/local-alias'
 
-const aliasStorage = useLocalAlias()
+const { setAlias, getAlias } = useLocalAliasStore()
 const inputText = ref('')
 
-const serverUrlStorage = useServerUrl()
+const { getServerUrl } = useServerUrlStore()
 const selectServerUrl = ref<(string | number)[] | null>(null)
 
 const tipIsShow = ref(false)
 
-const addServerUrl = () => {
+const handleAddAlias = () => {
   if (selectServerUrl.value?.length === 0)
     selectServerUrl.value = null
 
@@ -26,7 +26,7 @@ const addServerUrl = () => {
     const alias = selectServerUrl.value + inputText.value
     const suffix = alias.endsWith('/') ? '' : '/'
 
-    aliasStorage.value = alias + suffix
+    setAlias(alias + suffix)
     tipIsShow.value = false
   }
 }
@@ -38,17 +38,17 @@ const addServerUrl = () => {
       v-model:value="inputText"
       size="small"
       placeholder="本地目录别名..."
-      @keyup.enter="addServerUrl"
+      @keyup.enter="handleAddAlias"
     />
-    <NButton type="tertiary" size="small" @click="addServerUrl">
+    <NButton type="tertiary" size="small" @click="handleAddAlias">
       添加
     </NButton>
   </NInputGroup>
-  <NTag v-if="aliasStorage" closable @close="aliasStorage = null">
-    {{ aliasStorage }}
+  <NTag v-if="getAlias()" closable @close="setAlias(null)">
+    {{ getAlias() }}
   </NTag>
   <NCheckboxGroup v-model:value="selectServerUrl" :max="1">
-    <NCheckbox v-for="serverUrl in serverUrlStorage" :key="serverUrl" :value="serverUrl">
+    <NCheckbox v-for="serverUrl in getServerUrl()" :key="serverUrl" :value="serverUrl">
       {{ serverUrl }}
     </NCheckbox>
   </NCheckboxGroup>

@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 
 function main() {
@@ -10,4 +11,4 @@ function main() {
   return children
 }
 
-createApp(App).mount(main())
+createApp(App).use(createPinia()).mount(main())

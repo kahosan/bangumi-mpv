@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 
 import { NConfigProvider, darkTheme } from 'naive-ui'
 
@@ -7,34 +7,13 @@ import MpvMenu from './components/MpvMenu.vue'
 
 import { useReset } from './composables/use-reset'
 import { useOpenMpv } from './composables/use-open-mpv'
-import { useLocalAlias } from './composables/use-local-alias'
-import { useServerUrl } from './composables/use-server-url'
 
 const menuVisible = ref(false)
 const toggleMenuVisible = () => {
   menuVisible.value = !menuVisible.value
 }
 
-const depAlias = useLocalAlias()
-const depServerUrl = useServerUrl()
-
-const reset = () => useOpenMpv()
-  .then(openInMpv => useReset(openInMpv))
-
-// 重新定义每集 a 标签的动作
-reset()
-
-watch(
-  () => depAlias,
-  () => reset(),
-  { deep: true },
-)
-
-watch(
-  () => depServerUrl,
-  () => reset(),
-  { deep: true },
-)
+useReset(useOpenMpv)
 
 // set components dark mode
 const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark'

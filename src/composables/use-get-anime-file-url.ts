@@ -1,25 +1,27 @@
+import { ref } from 'vue'
+
 import { matchSubFolderReg, matchVideoReg } from '../util/reg'
+
+import { useServerUrlStore } from '../store/server-url'
 
 import { useAjax } from './use-ajax'
 import { useGetAnimeList } from './use-get-anime-list'
 import { useGetAnimeName } from './use-get-anime-name'
-import { useServerUrl } from './use-server-url'
 
 export async function useGetAnimePathUrl(alias?: string | null) {
-  const serverUrls = useServerUrl()
+  const { getServerUrl } = useServerUrlStore()
   const curAnimeName = useGetAnimeName()
-  let animePathUrl = ''
-  let error = true
+
+  const animePathUrl = ref<string | undefined>()
 
   // 如果有别名，直接返回别名
   if (alias !== undefined && alias !== null) {
-    return {
-      animePathUrl: alias,
-      error: false,
-    }
+    animePathUrl.value = alias
+
+    return animePathUrl
   }
 
-  const animeList = await useGetAnimeList(serverUrls)
+  const animeList = await useGetAnimeList(getServerUrl())
 
   /**
    * {
@@ -31,32 +33,31 @@ export async function useGetAnimePathUrl(alias?: string | null) {
     for (const anime of childrenList) {
       if (anime === curAnimeName) {
         // TODO 弄个工具函数处理后缀
-        animePathUrl = serverUrl + (curAnimeName.endsWith('/') ? curAnimeName : `${curAnimeName}/`)
-        error = false
+        animePathUrl.value = serverUrl + (curAnimeName.endsWith('/') ? curAnimeName : `${curAnimeName}/`)
       }
     }
   }
 
-  return {
-    animePathUrl,
-    error,
-  }
+  return animePathUrl
 }
 
 export async function useGetAnimeFileUrl(baseUrl: string, epId: number) {
   try {
     const url = new URL(`${epId}/`, baseUrl).href
     const dom = (await useAjax({ url })).responseText
-    let movieUrl: string | undefined
+    const movieUrl = ref<string | undefined>()
 
     // 匹配到了直接返回第一层的视频文件
-    movieUrl = dom.match(matchVideoReg)?.[0]
-    if (movieUrl)
-      return new URL(movieUrl, url).href
+    movieUrl.value = dom.match(matchVideoReg)?.[0]
+    if (movieUrl.value) {
+      movieUrl.value = new URL(movieUrl.value, url).href
+      return movieUrl
+    }
 
-    movieUrl = await handleSubFolder(url)
-    if (!movieUrl)
+    movieUrl.value = await handleSubFolder(url)
+    if (!movieUrl.value)
       throw new Error('没有找到视频文件')
+
     return movieUrl
   }
   catch (error) {
