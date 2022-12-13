@@ -9,13 +9,15 @@ export default defineConfig({
     monkey({
       entry: 'src/main.ts',
       userscript: {
-        icon: '',
-        namespace: 'npm/vite-plugin-monkey',
+        author: 'kahosan',
+        icon: 'https://bgm.tv/img/favicon.ico',
+        namespace: 'http://tampermonkey.net/',
         match: ['https://bgm.tv/subject/*'],
+        license: 'MIT',
       },
       build: {
         externalGlobals: {
-          vue: cdn.jsdelivr('Vue', 'dist/vue.global.prod.js'),
+          vue: cdn.unpkg('Vue', 'dist/vue.global.prod.js'),
         },
       },
     }),
