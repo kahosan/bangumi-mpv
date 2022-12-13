@@ -12,9 +12,10 @@ const handleAddServerUrl = (url: string) => {
   if (url === '')
     return
 
-  const prefix = url.startsWith('https://') || url.startsWith('http://') ? '' : 'http://'
+  const prefix = url.startsWith('https://') ? '' : url.startsWith('http://') ? '' : 'http://'
 
-  setServerUrl([...getServerUrl(), prefix + url + suffixCheck(url)])
+  const serverUrl = (prefix + suffixCheck(url)).replaceAll(' ', '')
+  setServerUrl([...getServerUrl(), serverUrl])
 }
 const handleRemoveServerUrl = (index: number) => {
   removeServerUrl(index)

@@ -26,7 +26,7 @@ const handleAddAlias = () => {
   if (inputText.value) {
     const alias = selectServerUrl.value + inputText.value
 
-    setAlias(alias + suffixCheck(alias))
+    setAlias(suffixCheck(alias).trim())
     tipIsShow.value = false
   }
 }
@@ -56,7 +56,7 @@ const handleAddAlias = () => {
     比如这个页面上动漫的中文名是「孤独摇滚!」, 而你的目录里的名称是 「孤独摇滚」没有！，就可以把 孤独摇滚 填进去。
     需要指定一下是哪个目录。
   </div>
-  <div v-show="tipIsShow" class="tip-2">
+  <div v-show="tipIsShow" class="tip-err">
     {{ inputText ? selectServerUrl ? null : '请选择一个服务器' : '请输入一个本地目录别名' }}
   </div>
 </template>
@@ -68,7 +68,7 @@ const handleAddAlias = () => {
   font-size: 12px;
 }
 
-.tip-2 {
+.tip-err {
   margin-top: 0.25rem;
   line-height: 1.4;
   font-size: 12px;

@@ -32,10 +32,8 @@ export async function useGetAnimePathUrl(alias?: string | null) {
    */
   for (const [serverUrl, childrenList] of Object.entries(animeList)) {
     for (const anime of childrenList) {
-      if (anime === curAnimeName) {
-        // TODO 弄个工具函数处理后缀
+      if (anime === curAnimeName)
         animePathUrl.value = serverUrl + suffixCheck(curAnimeName)
-      }
     }
   }
 
