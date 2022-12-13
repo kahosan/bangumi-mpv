@@ -49,15 +49,19 @@ export async function useGetAnimeFileUrl(baseUrl: string, epId: number) {
     const dom = (await useAjax({ url })).responseText
     let movieUrl: string | undefined
 
+    // 匹配到了直接返回第一层的视频文件
     movieUrl = dom.match(matchVideoReg)?.[0]
     if (movieUrl)
       return new URL(movieUrl, url).href
 
     movieUrl = await handleSubFolder(url)
+    if (!movieUrl)
+      throw new Error('没有找到视频文件')
     return movieUrl
   }
   catch (error) {
     console.error('useGetAnimeFileUrl', error)
+    console.error('baseURL', baseUrl, 'epId', epId)
   }
 }
 

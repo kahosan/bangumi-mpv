@@ -9,7 +9,8 @@ export async function useOpenMpv() {
 
   return async (event: HTMLAnchorElement) => {
     if (getAnimePathUrlError) {
-      console.error('寻找本地文件路径失败')
+      console.error(`寻找本地文件路径失败, animePathUrl: ${animePathUrl}`)
+      alert('寻找本地文件路径失败, 确定服务器的文件夹中是否存在该番剧。\n也可以尝试使用目录别名')
       return
     }
 
@@ -18,8 +19,8 @@ export async function useOpenMpv() {
     const markId = event.id.slice(4)
     const movieUrl = await useGetAnimeFileUrl(animePathUrl, Number(epId || ''))
 
-    if (!movieUrl) {
-      console.error('视频地址为空')
+    if (!movieUrl || !epId) {
+      console.error(`寻找本地文件失败, movieUrl: ${movieUrl}, epId: ${epId}`)
       return
     }
 
