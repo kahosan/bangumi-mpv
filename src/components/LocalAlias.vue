@@ -4,6 +4,7 @@ import { ref } from 'vue'
 
 import { useServerUrlStore } from '../store/server-url'
 import { useLocalAliasStore } from '../store/local-alias'
+import { suffixCheck } from '../util/suffix'
 
 const { setAlias, getAlias } = useLocalAliasStore()
 const inputText = ref('')
@@ -24,9 +25,8 @@ const handleAddAlias = () => {
 
   if (inputText.value) {
     const alias = selectServerUrl.value + inputText.value
-    const suffix = alias.endsWith('/') ? '' : '/'
 
-    setAlias(alias + suffix)
+    setAlias(alias + suffixCheck(alias))
     tipIsShow.value = false
   }
 }

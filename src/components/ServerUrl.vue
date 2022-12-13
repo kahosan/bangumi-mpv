@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { NButton, NInput, NInputGroup, NTag } from 'naive-ui'
 
 import { useServerUrlStore } from '../store/server-url'
+import { suffixCheck } from '../util/suffix'
 
 const serverUrl = ref('')
 const { getServerUrl, setServerUrl, removeServerUrl } = useServerUrlStore()
@@ -12,9 +13,8 @@ const handleAddServerUrl = (url: string) => {
     return
 
   const prefix = url.startsWith('https://') || url.startsWith('http://') ? '' : 'http://'
-  const suffix = url.endsWith('/') ? '' : '/'
 
-  setServerUrl([...getServerUrl(), prefix + url + suffix])
+  setServerUrl([...getServerUrl(), prefix + url + suffixCheck(url)])
 }
 const handleRemoveServerUrl = (index: number) => {
   removeServerUrl(index)

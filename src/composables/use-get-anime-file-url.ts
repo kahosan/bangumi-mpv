@@ -4,6 +4,7 @@ import { matchSubFolderReg, matchVideoReg } from '../util/reg'
 
 import { useServerUrlStore } from '../store/server-url'
 
+import { suffixCheck } from '../util/suffix'
 import { useAjax } from './use-ajax'
 import { useGetAnimeList } from './use-get-anime-list'
 import { useGetAnimeName } from './use-get-anime-name'
@@ -33,7 +34,7 @@ export async function useGetAnimePathUrl(alias?: string | null) {
     for (const anime of childrenList) {
       if (anime === curAnimeName) {
         // TODO 弄个工具函数处理后缀
-        animePathUrl.value = serverUrl + (curAnimeName.endsWith('/') ? curAnimeName : `${curAnimeName}/`)
+        animePathUrl.value = serverUrl + suffixCheck(curAnimeName)
       }
     }
   }
