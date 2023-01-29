@@ -61,7 +61,9 @@ export async function useGetAnimeFileUrl(baseUrl: string, epId: number) {
   }
   catch (error) {
     console.error('useGetAnimeFileUrl', error)
-    console.error('baseURL', baseUrl, 'epId', epId)
+    console.error('baseURL', baseUrl, 'epId', epId, '剧集的文件夹如果是 0x (01 02) 这样的形式，需要把 0 去掉')
+    // eslint-disable-next-line no-alert
+    alert(`视频文件不存在，检查一下是否存在第 ${epId} 集？`)
   }
 }
 
