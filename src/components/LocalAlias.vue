@@ -24,9 +24,9 @@ const handleAddAlias = () => {
   }
 
   if (inputText.value) {
-    const alias = selectServerUrl.value + inputText.value
+    const alias = selectServerUrl.value + inputText.value.trim()
 
-    setAlias(suffixCheck(alias).trim())
+    setAlias(suffixCheck(alias))
     tipIsShow.value = false
   }
 }
