@@ -12,8 +12,8 @@ export const useServerUrlStore = defineStore('serverUrl', () => {
     return serverUrl.value
   }
 
-  const removeServerUrl = (index: number) => {
-    serverUrl.value = serverUrl.value.filter((_, i) => i !== index)
+  const removeServerUrl = (targatUrl: string) => {
+    serverUrl.value = serverUrl.value.filter(url => url !== targatUrl)
   }
 
   return {

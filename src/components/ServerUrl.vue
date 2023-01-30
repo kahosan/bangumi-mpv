@@ -17,8 +17,8 @@ const handleAddServerUrl = (url: string) => {
   const serverUrl = (prefix + suffixCheck(url)).replaceAll(' ', '')
   setServerUrl([...getServerUrl(), serverUrl])
 }
-const handleRemoveServerUrl = (index: number) => {
-  removeServerUrl(index)
+const handleRemoveServerUrl = (targetUrl: string) => {
+  removeServerUrl(targetUrl)
 }
 </script>
 
@@ -34,8 +34,8 @@ const handleRemoveServerUrl = (index: number) => {
       添加
     </NButton>
   </NInputGroup>
-  <div v-for="url, index in getServerUrl()" :key="url">
-    <NTag closable @close="handleRemoveServerUrl(index)">
+  <div v-for="url in getServerUrl()" :key="url">
+    <NTag closable @close="handleRemoveServerUrl(url)">
       {{ url }}
     </NTag>
   </div>
