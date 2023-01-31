@@ -18,7 +18,11 @@ export async function useGetAnimeList(urls: string[]): Promise<Record<string, st
       }
     }
     catch (error) {
+      // eslint-disable-next-line no-alert
+      alert('请求服务器错误，详情在 console')
       console.error('useGetAnimeList', error)
+
+      throw new Error('ajax error')
     }
   }
 
