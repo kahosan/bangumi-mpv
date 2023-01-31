@@ -1,10 +1,8 @@
-import { ref } from 'vue'
-
 import { matchSubFolderReg, matchVideoReg } from '../util/reg'
+import { suffixCheck } from '../util/suffix'
 
 import { useServerUrlStore } from '../store/server-url'
 
-import { suffixCheck } from '../util/suffix'
 import { useAjax } from './use-ajax'
 import { useGetAnimeList } from './use-get-anime-list'
 import { useGetAnimeName } from './use-get-anime-name'
@@ -13,14 +11,9 @@ export async function useGetAnimePathUrl(alias?: string | null) {
   const { getServerUrl } = useServerUrlStore()
   const curAnimeName = useGetAnimeName()
 
-  const animePathUrl = ref<string | undefined>()
-
   // 如果有别名，直接返回别名
-  if (alias !== undefined && alias !== null) {
-    animePathUrl.value = alias
-
-    return animePathUrl
-  }
+  if (alias !== undefined && alias !== null)
+    return alias
 
   const animeList = await useGetAnimeList(getServerUrl())
 
@@ -30,41 +23,22 @@ export async function useGetAnimePathUrl(alias?: string | null) {
    *   'serverUrl': [animeName, animeName, animeName],
    * }
    */
-  for (const [serverUrl, childrenList] of Object.entries(animeList)) {
-    for (const anime of childrenList) {
-      if (anime === curAnimeName)
-        animePathUrl.value = serverUrl + suffixCheck(curAnimeName)
+  for (const [serverUrl, animeNameList] of Object.entries(animeList)) {
+    for (const anime of animeNameList) {
+      if (anime === curAnimeName) {
+        const animePathUrl = serverUrl + suffixCheck(curAnimeName)
+        return animePathUrl
+      }
     }
   }
-
-  return animePathUrl
 }
 
 export async function useGetAnimeFileUrl(baseUrl: string, epId: number) {
-  try {
-    const url = new URL(`${epId}/`, baseUrl).href
-    const dom = (await useAjax({ url })).responseText
-    const movieUrl = ref<string | undefined>()
+  const url = new URL(`${epId}/`, baseUrl).href
 
-    // 匹配到了直接返回第一层的视频文件
-    movieUrl.value = dom.match(matchVideoReg)?.[0]
-    if (movieUrl.value) {
-      movieUrl.value = new URL(movieUrl.value, url).href
-      return movieUrl
-    }
+  const movieUrl = await handleSubFolder(url)
 
-    movieUrl.value = await handleSubFolder(url)
-    if (!movieUrl.value)
-      throw new Error('没有找到视频文件')
-
-    return movieUrl
-  }
-  catch (error) {
-    console.error('useGetAnimeFileUrl', error)
-    console.error('baseURL', baseUrl, 'epId', epId, '剧集的文件夹如果是 0x (01 02) 这样的形式，需要把 0 去掉')
-    // eslint-disable-next-line no-alert
-    alert(`视频文件不存在，检查一下是否存在第 ${epId} 集？`)
-  }
+  return movieUrl
 }
 
 // 递归往子文件夹里找视频文件，返回找到的第一个视频文件的 url

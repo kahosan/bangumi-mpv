@@ -1,11 +1,12 @@
-import { useAnimePathUrlStore } from '../store/anime-path-url'
 import { useIinaStore } from '../store/iina'
 
-import { useGetAnimeFileUrl } from './use-get-anime-file-url'
+import { useGetAnimeFileUrl, useGetAnimePathUrl } from '../composables/use-get-anime-file-url'
+
+import { useLocalAliasStore } from '../store/local-alias'
 
 export async function useOpenMpv(event: HTMLAnchorElement) {
-  const { getAnimePathUrl } = useAnimePathUrlStore()
-  const animePathUrl = await getAnimePathUrl()
+  const { getAlias } = useLocalAliasStore()
+  const animePathUrl = await useGetAnimePathUrl(getAlias())
 
   if (animePathUrl === undefined) {
     console.error(`寻找本地文件路径失败, animePathUrl: ${animePathUrl}`)
@@ -27,14 +28,16 @@ export async function useOpenMpv(event: HTMLAnchorElement) {
     return
   }
 
-  const movieUrl = await useGetAnimeFileUrl(animePathUrl || '', +epId)
+  const movieUrl = await useGetAnimeFileUrl(animePathUrl, +epId)
+  if (movieUrl === undefined) {
+    // eslint-disable-next-line no-alert
+    alert(`视频文件不存在，检查一下是否存在第 ${epId} 集？`)
+    console.error('baseURL', animePathUrl, 'epId', epId, '剧集的文件夹如果是 0x (01 02) 这样的形式，需要把 0 去掉')
 
-  if (!movieUrl?.value) {
-    console.error(`寻找本地文件失败, movieUrl: ${movieUrl}, epId: ${epId}`)
     return
   }
 
-  openMpv(movieUrl.value, markId, epId)
+  openMpv(movieUrl, markId, epId)
 }
 
 function openMpv(url: string, markId: string, epId: string) {
