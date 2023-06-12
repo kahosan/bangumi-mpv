@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 import { NConfigProvider, darkTheme } from 'naive-ui'
 
@@ -16,7 +16,26 @@ const toggleMenuVisible = () => {
 useReset(useOpenMpv)
 
 // set components dark mode
-const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark'
+const node = document.documentElement
+const getCurrentMode = () => node.getAttribute('data-theme') === 'dark'
+const isDarkMode = ref<boolean>(getCurrentMode())
+
+const observerCallback: MutationCallback = (mutationList, observer) => {
+  mutationList.forEach((mutation) => {
+    if (mutation.type === 'attributes')
+      isDarkMode.value = getCurrentMode()
+  })
+}
+
+const observer = new MutationObserver(observerCallback)
+
+onMounted(() => {
+  observer.observe(node, { attributes: true })
+})
+
+onUnmounted(() => {
+  observer.disconnect()
+})
 </script>
 
 <template>
@@ -81,7 +100,7 @@ html[data-theme='dark'] .main-button:hover {
   box-shadow: unset !important;
 }
 
-.menu-content >* {
+.menu-content>* {
   font-size: 12px !important;
 }
 </style>
